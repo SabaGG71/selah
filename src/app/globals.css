@@ -1,26 +1,180 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Selah, read from the lookbook (https://claude.ai/artifact/Bx8geQCLSswcspLjbZi2wF):
+   - Type in near-black #111111, secondary #333333, labels grey. Thin black rules (1px #111111).
+   - Blue #142FB8 is the one interface colour (the Hours model in board 05): every link, nav word,
+     button and the date bar. No link is ever black or grey.
+   - Warm off-white ground #F3F1EC, white #FFFFFF for the few surfaces that sit on photos.
+   - Old-style serif for the one statement per screen, a small grotesk for everything else.
+   - Corners 0 to 2px. No cards with shadows.
+   The other two lookbook inks preview in dev with ?ink=oxblood or ?ink=slate (blue needs no param). */
 
 @theme inline {
+  --font-sans: var(--font-instrument-sans), "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-serif: var(--font-eb-garamond), "EB Garamond", Garamond, Georgia, serif;
+  --font-heading: var(--font-eb-garamond), "EB Garamond", Garamond, Georgia, serif;
+
+  /* Type scale (lookbook: 12px caps nav, 13px labels and datelines, 16px reading, serif 50-72px) */
+  --text-caps: 0.75rem;
+  --text-caps--line-height: 1rem;
+  --text-caps--letter-spacing: 0.06em;
+  --text-ui: 0.8125rem;
+  --text-ui--line-height: 1.125rem;
+  --text-body: 1rem;
+  --text-body--line-height: 1.5rem;
+  --text-display: clamp(2.5rem, 1.15rem + 3.6vw, 4.5rem);
+  --text-display--line-height: 1;
+  --text-display--letter-spacing: -0.02em;
+
+  --color-ground: var(--ground);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-muted: var(--ink-muted);
+  --color-action: var(--action);
+  --color-action-hover: var(--action-hover);
+  --color-on-action: var(--on-action);
+  --color-rule: var(--rule);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --radius-sm: 1px;
+  --radius-md: 2px;
+  --radius-lg: 2px;
+  --radius-xl: 2px;
+
+  /* Client roster rows. Each track holds two copies, so -50% loops without a seam. */
+  --animate-marquee: marquee var(--marquee-duration, 60s) linear infinite;
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Hero slideshow clock: 5s per photo. Its end event advances the slide. */
+  --animate-slide-progress: slide-progress 5s linear forwards;
+  @keyframes slide-progress {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+:root {
+  --ground: #f3f1ec;
+  --paper: #ffffff;
+  --ink: #111111;
+  --ink-soft: #333333;
+  /* the lookbook's #767676 is 4.0:1 on this ground; this grey reads the same and passes 4.5:1 */
+  --ink-muted: #686868;
+  --action: #142fb8;
+  --action-hover: #0b0670;
+  --on-action: #ffffff;
+  --rule: #111111;
+
+  --bar-h: 2rem;
+  --header-h: 4rem;
+  /* Side margin for header, panels and sections: 16px on phones, about 49px at 1440, 56px max. */
+  --gutter: clamp(1rem, 3.4vw, 3.5rem);
+
+  --background: var(--ground);
+  --foreground: var(--ink);
+  --card: var(--paper);
+  --card-foreground: var(--ink);
+  --popover: var(--ground);
+  --popover-foreground: var(--ink);
+  --primary: var(--action);
+  --primary-foreground: var(--on-action);
+  --secondary: var(--paper);
+  --secondary-foreground: var(--ink);
+  --muted: #e9e6df;
+  --muted-foreground: var(--ink-muted);
+  --accent: #e9e6df;
+  --accent-foreground: var(--ink);
+  --destructive: #b3261e;
+  --border: var(--rule);
+  --input: var(--rule);
+  --ring: var(--action);
+  --radius: 2px;
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --header-h: 5rem;
+  }
+}
+
+:root[data-ink="oxblood"] {
+  --action: #4a0a05;
+  --action-hover: #2b0603;
+}
+:root[data-ink="slate"] {
+  --action: #59767b;
+  --action-hover: #3d5357;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    color-scheme: light;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--header-h) + 1rem);
+  }
+  body {
+    @apply bg-background font-sans text-body text-foreground antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  /* Links are always the interface blue (lookbook: one ink for links and controls). */
+  a {
+    color: var(--action);
+  }
+  a,
+  button,
+  summary,
+  label {
+    touch-action: manipulation;
+  }
+  :focus-visible {
+    outline: 2px solid var(--action);
+    outline-offset: 3px;
+  }
+  ::selection {
+    background: var(--action);
+    color: var(--on-action);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }

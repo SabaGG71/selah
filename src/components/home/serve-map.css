@@ -1,0 +1,382 @@
+/*
+  Leaflet's own layout rules, from leaflet/dist/leaflet.css 1.9.4, without the controls, popups,
+  tooltips and default icons this map doesn't use. Copied rather than imported so no url() reaches
+  the Tailwind Turbopack loader. Unlayered on purpose, like leaflet.css itself.
+*/
+.leaflet-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-container,
+.leaflet-pane > svg,
+.leaflet-pane > canvas,
+.leaflet-zoom-box,
+.leaflet-image-layer,
+.leaflet-layer {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.leaflet-container {
+  overflow: hidden;
+  outline-offset: 1px;
+  -webkit-tap-highlight-color: transparent;
+}
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.leaflet-tile::selection {
+  background: transparent;
+}
+.leaflet-safari .leaflet-tile {
+  image-rendering: -webkit-optimize-contrast;
+}
+.leaflet-safari .leaflet-tile-container {
+  width: 1600px;
+  height: 1600px;
+  -webkit-transform-origin: 0 0;
+}
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+  display: block;
+}
+.leaflet-container .leaflet-overlay-pane svg {
+  max-width: none !important;
+  max-height: none !important;
+}
+.leaflet-container .leaflet-marker-pane img,
+.leaflet-container .leaflet-shadow-pane img,
+.leaflet-container .leaflet-tile-pane img,
+.leaflet-container img.leaflet-image-layer,
+.leaflet-container .leaflet-tile {
+  max-width: none !important;
+  max-height: none !important;
+  width: auto;
+  padding: 0;
+}
+.leaflet-container img.leaflet-tile {
+  mix-blend-mode: plus-lighter;
+}
+.leaflet-container.leaflet-touch-zoom {
+  touch-action: pan-x pan-y;
+}
+.leaflet-container.leaflet-touch-drag {
+  touch-action: none;
+  touch-action: pinch-zoom;
+}
+.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom {
+  touch-action: none;
+}
+.leaflet-tile {
+  filter: inherit;
+  visibility: hidden;
+}
+.leaflet-tile-loaded {
+  visibility: inherit;
+}
+.leaflet-zoom-box {
+  width: 0;
+  height: 0;
+  box-sizing: border-box;
+  z-index: 800;
+}
+.leaflet-overlay-pane svg {
+  user-select: none;
+}
+.leaflet-pane {
+  z-index: 400;
+}
+.leaflet-tile-pane {
+  z-index: 200;
+}
+.leaflet-overlay-pane {
+  z-index: 400;
+}
+.leaflet-shadow-pane {
+  z-index: 500;
+}
+.leaflet-marker-pane {
+  z-index: 600;
+}
+.leaflet-tooltip-pane {
+  z-index: 650;
+}
+.leaflet-popup-pane {
+  z-index: 700;
+}
+.leaflet-map-pane canvas {
+  z-index: 100;
+}
+.leaflet-map-pane svg {
+  z-index: 200;
+}
+.leaflet-zoom-animated {
+  transform-origin: 0 0;
+}
+svg.leaflet-zoom-animated {
+  will-change: transform;
+}
+.leaflet-zoom-anim .leaflet-zoom-animated {
+  transition: transform 0.25s cubic-bezier(0, 0, 0.25, 1);
+}
+.leaflet-zoom-anim .leaflet-tile,
+.leaflet-pan-anim .leaflet-tile {
+  transition: none;
+}
+.leaflet-zoom-anim .leaflet-zoom-hide {
+  visibility: hidden;
+}
+.leaflet-interactive {
+  cursor: pointer;
+}
+.leaflet-grab {
+  cursor: grab;
+}
+.leaflet-dragging .leaflet-grab,
+.leaflet-dragging .leaflet-grab .leaflet-interactive,
+.leaflet-dragging .leaflet-marker-draggable {
+  cursor: grabbing;
+}
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-image-layer,
+.leaflet-pane > svg path,
+.leaflet-tile-container {
+  pointer-events: none;
+}
+.leaflet-marker-icon.leaflet-interactive,
+.leaflet-image-layer.leaflet-interactive,
+.leaflet-pane > svg path.leaflet-interactive,
+svg.leaflet-image-layer.leaflet-interactive path {
+  pointer-events: auto;
+}
+
+/*
+  Where we serve (serve-map.tsx): Leaflet in Selah's colours. The tiles are re-toned by an SVG
+  filter set on the tile pane from the component, so this file holds no url().
+*/
+.serve-map.leaflet-container {
+  background: #efece6;
+  font: inherit;
+}
+/* Leaflet's layers would paint over an outline on the map itself; the frame draws the focus ring. */
+.serve-map.leaflet-container:focus {
+  outline: none;
+}
+
+/* Places: a point with nothing around it, so the dot and its label can sit on any side. */
+.serve-place {
+  overflow: visible;
+}
+.serve-link {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: auto;
+  color: var(--action);
+  text-decoration: none;
+}
+.serve-dot {
+  position: absolute;
+  left: -5.5px;
+  top: -5.5px;
+  width: 11px;
+  height: 11px;
+  border-radius: 9999px;
+  background: #fff;
+  box-shadow:
+    0 0 0 1.25px rgb(17 17 17 / 0.85),
+    0 1px 4px rgb(17 17 17 / 0.2);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.serve-dot::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: inherit;
+  background: var(--ink);
+  transition: background-color 0.2s;
+}
+/* A city's label: the site's white label, in the link blue. */
+.serve-name {
+  position: absolute;
+  top: -11px;
+  white-space: nowrap;
+  padding: 3px 7px;
+  border-radius: 2px;
+  background: #fff;
+  color: var(--action);
+  font-size: 12.5px;
+  line-height: 16px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  box-shadow:
+    0 0 0 1px rgb(17 17 17 / 0.14),
+    0 4px 10px -6px rgb(17 17 17 / 0.4);
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+.serve-place[data-side="right"] .serve-name,
+.serve-place[data-side="none"] .serve-name {
+  left: 11px;
+}
+.serve-place[data-side="left"] .serve-name {
+  right: 11px;
+}
+.serve-place[data-side="top"] .serve-name {
+  top: auto;
+  bottom: 11px;
+  left: 0;
+  transform: translateX(-50%);
+}
+.serve-place[data-side="bottom"] .serve-name {
+  top: 11px;
+  left: 0;
+  transform: translateX(-50%);
+}
+.serve-place[data-side="none"] .serve-name,
+.serve-place[data-off] {
+  visibility: hidden;
+}
+.serve-link:hover .serve-name,
+.serve-place.is-active .serve-name {
+  visibility: visible;
+  background: var(--action);
+  color: var(--on-action);
+}
+.serve-mi {
+  display: none;
+  margin-left: 6px;
+  opacity: 0.8;
+}
+.serve-place.is-active .serve-mi {
+  display: inline;
+}
+.serve-place.is-active .serve-dot {
+  transform: scale(1.35);
+}
+.serve-place.is-active .serve-dot::after {
+  background: var(--action);
+}
+
+/*
+  The base: Selah's pin, a drop in the interface blue with their palm (the official favicon,
+  unchanged) on a white disc, standing on a small blue point with a soft shadow.
+*/
+.serve-home::before {
+  content: "";
+  position: absolute;
+  left: -9px;
+  top: -3px;
+  width: 18px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgb(17 17 17 / 0.28);
+  filter: blur(2px);
+}
+.serve-home .serve-dot {
+  left: -4px;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  background: var(--action);
+  box-shadow: 0 0 0 2px #fff;
+}
+.serve-home .serve-dot::after {
+  display: none;
+}
+.serve-pin {
+  position: absolute;
+  left: -26px;
+  top: -64px;
+  width: 52px;
+  height: 66px;
+  filter: drop-shadow(0 6px 8px rgb(17 17 17 / 0.28));
+}
+.serve-pin svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.serve-pin-drop {
+  fill: var(--action);
+  stroke: #fff;
+  stroke-width: 2.5;
+}
+.serve-pin-disc {
+  fill: #fff;
+}
+/* Same weight as Leaflet's marker-pane img rule, and later, so the palm keeps its size. */
+.leaflet-container .serve-pin img {
+  position: absolute;
+  left: 9px;
+  top: 9px;
+  width: 34px;
+  height: 34px;
+  border-radius: 9999px;
+}
+.serve-home .serve-name {
+  color: var(--ink);
+  font-size: 13px;
+  padding: 3px 8px;
+}
+.serve-home .serve-name b {
+  font-weight: 600;
+}
+.serve-home[data-side="right"] .serve-name,
+.serve-home[data-side="none"] .serve-name {
+  left: 30px;
+  top: -49px;
+}
+.serve-home[data-side="left"] .serve-name {
+  right: 30px;
+  top: -49px;
+}
+.serve-home[data-side="top"] .serve-name {
+  top: auto;
+  bottom: 72px;
+  left: 0;
+  transform: translateX(-50%);
+}
+.serve-home[data-side="bottom"] .serve-name {
+  top: 10px;
+  left: 0;
+  transform: translateX(-50%);
+}
+
+/* The rings' names, set along their curves (layout() in serve-map.tsx). */
+.serve-ring-name {
+  fill: rgb(17 17 17 / 0.62);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  paint-order: stroke;
+  stroke: #f0ede7;
+  stroke-width: 3.5px;
+  stroke-linejoin: round;
+}
+.serve-ring-name[data-off] {
+  visibility: hidden;
+}
+
+/* The line from Denver to a city, drawn out from the base while the city is pointed at. */
+.serve-route {
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .serve-route {
+    animation: serve-route 0.7s cubic-bezier(0.65, 0, 0.35, 1) both;
+  }
+}
+@keyframes serve-route {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
